@@ -26,9 +26,11 @@ import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -333,6 +335,15 @@ public class DateAssertionsExamples extends AbstractAssertionsExamples {
     OffsetDateTime offsetDateTime2 = OffsetDateTime.of(2000, 12, 12, 0, 0, 0, 0, ZoneOffset.ofHours(0));
     // assertion succeeds
     assertThat(offsetDateTime1).isAtSameInstantAs(offsetDateTime2);
+  }
+
+  @Test
+  public void disambiguate_different_date_time_representation() {
+    Date now = new Date();
+    Object localDateTime = LocalDateTime.ofInstant(now.toInstant(), ZoneId.systemDefault());
+
+    logAssertionErrorMessage(() -> assertThat(Collections.singleton(localDateTime)).containsExactly(now),
+                             "disambiguate date time representation");
   }
 
 }
